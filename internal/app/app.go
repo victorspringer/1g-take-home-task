@@ -13,17 +13,30 @@ import (
 	"go.uber.org/zap"
 )
 
+type handler struct {
+	logger *zap.Logger
+}
+
 // Run starts the HTTP server on specified port.
 func Run(port int, logger *zap.Logger) {
+	handler := &handler{logger: logger}
+
 	router := gin.New()
 	router.Use(gin.Recovery())
 
-	router.GET("/", func(c *gin.Context) {
-		logger.Info("test", zap.String("requestUrl", c.Request.URL.Path))
-		c.JSON(http.StatusOK, gin.H{
-			"requested": c.Request.URL.Path,
-		})
-	})
+	router.GET("/", handler.healthCheck())
+
+	devices := router.Group("devices")
+
+	devices.GET("/", handler.listAllDevices())
+	devices.GET("/:id", handler.getDeviceByID())
+	devices.GET("/search", handler.searchDevices())
+
+	devices.POST("/", handler.addDevice())
+
+	devices.PUT("/:id", handler.updateDevice())
+
+	devices.DELETE("/:id", handler.deleteDevice())
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", port),
