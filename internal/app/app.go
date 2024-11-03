@@ -34,7 +34,7 @@ func Run(port int, logger *zap.Logger) {
 
 	devices.POST("/", handler.addDevice())
 
-	devices.PUT("/:id", handler.updateDevice())
+	devices.PATCH("/:id", handler.updateDevice())
 
 	devices.DELETE("/:id", handler.deleteDevice())
 
