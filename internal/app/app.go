@@ -10,33 +10,33 @@ import (
 	"syscall"
 
 	"github.com/gin-gonic/gin"
+	"github.com/victorspringer/1g-take-home-task/internal/pkg/device"
 	"go.uber.org/zap"
 )
 
-type handler struct {
-	logger *zap.Logger
-}
-
 // Run starts the HTTP server on specified port.
-func Run(port int, logger *zap.Logger) {
-	handler := &handler{logger: logger}
+func Run(port int, logger *zap.Logger, deviceRepository *device.Repository) {
+	handler := &handler{
+		logger:           logger,
+		deviceRepository: *deviceRepository,
+	}
 
 	router := gin.New()
 	router.Use(gin.Recovery())
 
-	router.GET("/", handler.healthCheck())
+	router.GET("/", handler.healthCheck)
 
 	devices := router.Group("devices")
 
-	devices.GET("/", handler.listAllDevices())
-	devices.GET("/:id", handler.getDeviceByID())
-	devices.GET("/search", handler.searchDevices())
+	devices.GET("/", handler.listAllDevices)
+	devices.GET("/:id", handler.getDeviceByID)
+	devices.GET("/search", handler.searchDevices)
 
-	devices.POST("/", handler.addDevice())
+	devices.POST("/", handler.addDevice)
 
-	devices.PATCH("/:id", handler.updateDevice())
+	devices.PATCH("/:id", handler.updateDevice)
 
-	devices.DELETE("/:id", handler.deleteDevice())
+	devices.DELETE("/:id", handler.deleteDevice)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", port),
