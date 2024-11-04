@@ -11,6 +11,7 @@ import (
 	"github.com/victorspringer/1g-take-home-task/internal/pkg/device"
 )
 
+// Client connects to a database and implements a repository interface.
 type Client struct {
 	db *pgxpool.Pool
 }
@@ -42,10 +43,12 @@ func New(connString string) (*Client, error) {
 	return &Client{db: db}, nil
 }
 
+// Close closes all database pool connections.
 func (c *Client) Close() {
 	c.db.Close()
 }
 
+// Store adds a new device.
 func (c *Client) Store(device *device.Device) error {
 	device.ID = uuid.New().String()
 	device.CreationTime = time.Now()
@@ -60,6 +63,7 @@ func (c *Client) Store(device *device.Device) error {
 	return err
 }
 
+// FindByID gets a device by its ID.
 func (c *Client) FindByID(id string) (*device.Device, error) {
 	row := c.db.QueryRow(context.Background(), "SELECT id, name, brand, creation_time, update_time FROM devices WHERE id=$1", id)
 
@@ -75,6 +79,7 @@ func (c *Client) FindByID(id string) (*device.Device, error) {
 	return device, nil
 }
 
+// List gets all devices.
 func (c *Client) List() ([]device.Device, error) {
 	rows, err := c.db.Query(context.Background(), "SELECT id, name, brand, creation_time, update_time FROM devices")
 	if err != nil {
@@ -94,6 +99,7 @@ func (c *Client) List() ([]device.Device, error) {
 	return devices, nil
 }
 
+// Update updates a device.
 func (c *Client) Update(device *device.Device) error {
 	if device.ID == "" {
 		return errors.New("device id is required")
@@ -125,11 +131,13 @@ func (c *Client) Update(device *device.Device) error {
 	return errors.New("invalid update request")
 }
 
+// Remove deletes a device by its ID.
 func (c *Client) Remove(id string) error {
 	_, err := c.db.Exec(context.Background(), "DELETE FROM devices WHERE id=$1", id)
 	return err
 }
 
+// FindByBrand gets a list of devices by brand.
 func (c *Client) FindByBrand(brand string) ([]device.Device, error) {
 	rows, err := c.db.Query(context.Background(), "SELECT id, name, brand, creation_time, update_time FROM devices WHERE brand=$1", brand)
 	if err != nil {

@@ -10,9 +10,20 @@ import (
 	"syscall"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	_ "github.com/victorspringer/1g-take-home-task/docs"
 	"github.com/victorspringer/1g-take-home-task/internal/pkg/device"
 	"go.uber.org/zap"
 )
+
+// @title Devices Service
+// @version 1.0
+// @description Devices Service for technical challenge.
+// @contact.name Victor Springer
+// @license.name MIT License
+// @host localhost:8080
+// @BasePath /
 
 // Run starts the HTTP server on specified port.
 func Run(port int, logger *zap.Logger, deviceRepository device.Repository) {
@@ -25,6 +36,7 @@ func Run(port int, logger *zap.Logger, deviceRepository device.Repository) {
 	router.Use(gin.Recovery())
 
 	router.GET("/", handler.healthCheck)
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	devices := router.Group("devices")
 

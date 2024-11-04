@@ -20,6 +20,14 @@ func (h *handler) healthCheck(c *gin.Context) {
 	})
 }
 
+// @Summary List all devices
+// @Description Get a list of all devices
+// @ID list-all-devices
+// @Produce json
+// @Success 200
+// @Failure 404
+// @Failure 500
+// @Router /devices [get]
 func (h *handler) listAllDevices(c *gin.Context) {
 	h.logger.Debug("list all devices", zap.String("requestUrl", c.Request.URL.Path))
 
@@ -44,6 +52,15 @@ func (h *handler) listAllDevices(c *gin.Context) {
 	})
 }
 
+// @Summary Get device by id
+// @Description Get device data by id
+// @ID get-device-by-id
+// @Param id path string true "Device's ID"
+// @Produce json
+// @Success 200
+// @Failure 404
+// @Failure 500
+// @Router /devices/{id} [get]
 func (h *handler) getDeviceByID(c *gin.Context) {
 	h.logger.Debug("get device by id", zap.String("requestUrl", c.Request.URL.Path))
 
@@ -69,6 +86,15 @@ func (h *handler) getDeviceByID(c *gin.Context) {
 	})
 }
 
+// @Summary Get devices by brand
+// @Description Get a list of device data by brand
+// @ID search-devices
+// @Param brand query string true "Device's brand"
+// @Produce json
+// @Success 200
+// @Failure 404
+// @Failure 500
+// @Router /devices/search [get]
 func (h *handler) searchDevices(c *gin.Context) {
 	h.logger.Debug("search device", zap.String("requestUrl", c.Request.URL.Path+"?"+c.Request.URL.Query().Encode()))
 
@@ -95,6 +121,15 @@ func (h *handler) searchDevices(c *gin.Context) {
 	})
 }
 
+// @Summary Add device
+// @Description Creates a new device
+// @ID add-device
+// @Param device body device.Device true "Device to add"
+// @Produce json
+// @Success 201
+// @Failure 400
+// @Failure 500
+// @Router /devices [post]
 func (h *handler) addDevice(c *gin.Context) {
 	h.logger.Debug("add device")
 
@@ -127,6 +162,16 @@ func (h *handler) addDevice(c *gin.Context) {
 	})
 }
 
+// @Summary Update device
+// @Description Update device data by id
+// @ID update-device
+// @Param id path string true "Device's ID"
+// @Param device body device.Device true "Fields to update"
+// @Produce json
+// @Success 200
+// @Failure 400
+// @Failure 500
+// @Router /devices/{id} [patch]
 func (h *handler) updateDevice(c *gin.Context) {
 	h.logger.Debug("update device", zap.String("requestUrl", c.Request.URL.Path))
 
@@ -156,6 +201,14 @@ func (h *handler) updateDevice(c *gin.Context) {
 	})
 }
 
+// @Summary Delete device
+// @Description Delete device data by id
+// @ID delete-device
+// @Param id path string true "Device's ID"
+// @Produce json
+// @Success 200
+// @Failure 500
+// @Router /devices/{id} [delete]
 func (h *handler) deleteDevice(c *gin.Context) {
 	h.logger.Debug("delete device", zap.String("requestUrl", c.Request.URL.Path))
 

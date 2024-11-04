@@ -2,6 +2,7 @@ package device
 
 import "time"
 
+// Device represents the device entity data structure.
 type Device struct {
 	ID           string    `json:"id"`
 	Name         string    `json:"name"`
@@ -10,6 +11,7 @@ type Device struct {
 	UpdateTime   time.Time `json:"updateTime"`
 }
 
+// Repository is an interface for devices dataset.
 type Repository interface {
 	Store(device *Device) error
 	FindByID(id string) (*Device, error)

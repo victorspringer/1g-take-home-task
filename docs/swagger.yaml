@@ -1,0 +1,142 @@
+basePath: /
+definitions:
+  device.Device:
+    properties:
+      brand:
+        type: string
+      creationTime:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updateTime:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: Victor Springer
+  description: Devices Service for technical challenge.
+  license:
+    name: MIT License
+  title: Devices Service
+  version: "1.0"
+paths:
+  /devices:
+    get:
+      description: Get a list of all devices
+      operationId: list-all-devices
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: List all devices
+    post:
+      description: Creates a new device
+      operationId: add-device
+      parameters:
+      - description: Device to add
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/device.Device'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Add device
+  /devices/{id}:
+    delete:
+      description: Delete device data by id
+      operationId: delete-device
+      parameters:
+      - description: Device's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Delete device
+    get:
+      description: Get device data by id
+      operationId: get-device-by-id
+      parameters:
+      - description: Device's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get device by id
+    patch:
+      description: Update device data by id
+      operationId: update-device
+      parameters:
+      - description: Device's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Fields to update
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/device.Device'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update device
+  /devices/search:
+    get:
+      description: Get a list of device data by brand
+      operationId: search-devices
+      parameters:
+      - description: Device's brand
+        in: query
+        name: brand
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get devices by brand
+swagger: "2.0"
