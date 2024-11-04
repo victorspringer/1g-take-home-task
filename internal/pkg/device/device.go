@@ -3,11 +3,11 @@ package device
 import "time"
 
 type Device struct {
-	ID           string        `json:"id"`
-	Name         string        `json:"name"`
-	Brand        string        `json:"brand"`
-	CreationTime time.Duration `json:"creationTime"`
-	UpdateTime   time.Duration `json:"updateTime"`
+	ID           string    `json:"id"`
+	Name         string    `json:"name"`
+	Brand        string    `json:"brand"`
+	CreationTime time.Time `json:"creationTime"`
+	UpdateTime   time.Time `json:"updateTime"`
 }
 
 type Repository interface {
