@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	logger, _ := zap.NewDevelopment()
+	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 
 	port, err := strconv.Atoi(getEnv("HTTP_PORT", "8080"))
@@ -19,7 +19,7 @@ func main() {
 		logger.With(zap.Error(err)).Fatal("unable to parse HTTP_PORT env var value")
 	}
 
-	connString := "postgres://user:pass@localhost:5432/challenge?sslmode=disable"
+	connString := getEnv("POSTGRES_CONN", "postgres://user:pass@localhost:5432/challenge?sslmode=disable")
 	repo, err := repository.New(connString)
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)

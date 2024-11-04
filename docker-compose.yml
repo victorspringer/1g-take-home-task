@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: 1g_victor_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: challenge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 1g_victor_go_app
+    environment:
+      HTTP_PORT: "8080"
+      POSTGRES_CONN: "postgres://user:pass@1g_victor_postgres:5432/challenge?sslmode=disable"
+      GIN_MODE: "release"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    command: ["/app"]
+
+volumes:
+  postgres_data:
+    driver: local
