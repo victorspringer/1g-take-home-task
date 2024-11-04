@@ -25,6 +25,7 @@ func (h *handler) listAllDevices(c *gin.Context) {
 
 	devices, err := h.deviceRepository.List()
 	if err != nil {
+		h.logger.Error("error listing all devices", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
@@ -49,6 +50,7 @@ func (h *handler) getDeviceByID(c *gin.Context) {
 	id := c.Param("id")
 	device, err := h.deviceRepository.FindByID(id)
 	if err != nil {
+		h.logger.Error("error getting device by id", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
@@ -74,6 +76,7 @@ func (h *handler) searchDevices(c *gin.Context) {
 
 	devices, err := h.deviceRepository.FindByBrand(brand)
 	if err != nil {
+		h.logger.Error("error searching devices by brand", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
@@ -104,7 +107,15 @@ func (h *handler) addDevice(c *gin.Context) {
 		return
 	}
 
+	if dvc.ID != "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "device id is not a valid field",
+		})
+		return
+	}
+
 	if err := h.deviceRepository.Store(&dvc); err != nil {
+		h.logger.Error("error adding device", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
@@ -133,6 +144,7 @@ func (h *handler) updateDevice(c *gin.Context) {
 	dvc.ID = id
 
 	if err := h.deviceRepository.Update(&dvc); err != nil {
+		h.logger.Error("error updating device", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
@@ -150,6 +162,7 @@ func (h *handler) deleteDevice(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := h.deviceRepository.Remove(id); err != nil {
+		h.logger.Error("error deleting device", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})

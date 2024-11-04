@@ -15,10 +15,10 @@ import (
 )
 
 // Run starts the HTTP server on specified port.
-func Run(port int, logger *zap.Logger, deviceRepository *device.Repository) {
+func Run(port int, logger *zap.Logger, deviceRepository device.Repository) {
 	handler := &handler{
 		logger:           logger,
-		deviceRepository: *deviceRepository,
+		deviceRepository: deviceRepository,
 	}
 
 	router := gin.New()
