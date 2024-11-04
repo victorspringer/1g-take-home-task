@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:17.0
     container_name: 1g_victor_postgres
     environment:
       POSTGRES_USER: user
